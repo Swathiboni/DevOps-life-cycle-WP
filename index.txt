@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>DevOps Lifecycle — Daily Expense Tracker (Visual)</title>
+<style>
+  :root{
+    --bg:#0f1724; --card:#0b1220; --accent:#06b6d4; --muted:#94a3b8;
+    --good:#16a34a; --warn:#f59e0b; --danger:#ef4444;
+    --glass: rgba(255,255,255,0.03);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  }
+  html,body{height:100%; margin:0; background:
+    radial-gradient(circle at 10% 10%, rgba(6,182,212,0.06), transparent 10%),
+    linear-gradient(180deg,#071026 0%, #081424 100%); color:#e6eef6;}
+  .wrap{max-width:1100px; margin:28px auto; padding:28px; display:grid;
+        grid-template-columns: 520px 1fr; gap:22px; align-items:start;}
+  header{grid-column:1/-1; margin-bottom:6px;}
+  h1{margin:0; font-size:20px; color:var(--accent);}
+  p.lead{margin:6px 0 18px; color:var(--muted); font-size:13px;}
+  /* Card */
+  .card{background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+        border:1px solid rgba(255,255,255,0.03); padding:18px; border-radius:12px; box-shadow:0 6px 30px rgba(2,6,23,0.5);}
+  /* SVG area */
+  .diagram { display:flex; align-items:center; justify-content:center; position:relative; height:520px; }
+  svg { width:480px; height:480px; overflow:visible; }
+  .stage-label { font-size:12px; fill:#e6eef6; pointer-events:none; font-weight:600;}
+  /* description panel */
+  .panel { padding:18px; border-radius:10px; height:520px; overflow:auto; }
+  .stage-title{font-size:18px; margin:0 0 6px; color:var(--accent);}
+  .stage-desc{color:var(--muted); margin:0 0 12px;}
+  .mapping { background:var(--glass); padding:12px; border-radius:8px; color:#cfeaf0; font-size:13px; }
+  .mapping strong{color:#fff;}
+  /* interactive styles */
+  .stage { cursor:pointer; transition:transform .18s ease, filter .18s ease; filter:grayscale(.18) contrast(.9); }
+  .stage:hover { transform:translateY(-6px) scale(1.03); filter: none; }
+  .active { stroke: var(--accent); stroke-width:3px; filter: none; transform:scale(1.02); }
+  .badge { font-size:11px; fill: #071426; font-weight:700; }
+  /* stage list */
+  .stages-list { margin-top:14px; display:grid; gap:8px; }
+  .stages-list button { background:transparent; border:1px solid rgba(255,255,255,0.04); padding:10px; border-radius:8px; color:var(--muted); cursor:pointer; text-align:left;}
+  .stages-list button:hover{border-color:rgba(6,182,212,0.14); color:#dffbff;}
+  footer { grid-column:1/-1; text-align:center; margin-top:14px; color:var(--muted); font-size:13px;}
+  /* responsive */
+  @media (max-width:980px){
+    .wrap{grid-template-columns: 1fr; padding:16px;}
+    .diagram{order:2; height:420px;}
+    .panel{order:1; height:auto;}
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>DevOps Lifecycle — Visual Walkthrough</h1>
+      <p class="lead">This diagram explains the eight DevOps stages and maps each stage to the <strong>Daily Expense Tracker</strong> experiment: what you do in that stage and why it matters.</p>
+    </header>
+
+    <!-- Diagram Card -->
+    <div class="card diagram" aria-hidden="false">
+      <svg viewBox="-260 -260 520 520" role="img" aria-label="DevOps lifecycle diagram">
+        <!-- circular background rings -->
+        <defs>
+          <linearGradient id="g1" x1="0" x2="1">
+            <stop offset="0" stop-color="rgba(6,182,212,0.12)"/>
+            <stop offset="1" stop-color="rgba(6,182,212,0.03)"/>
+          </linearGradient>
+          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="6" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <!-- base circle -->
+        <circle r="200" fill="url(#g1)" stroke="rgba(255,255,255,0.02)" stroke-width="1"></circle>
+
+        <!-- eight stage nodes placed around circle -->
+        <!-- We'll draw arcs and small circles with text -->
+        <!-- Coordinates computed manually -->
+        <!-- Stage positions (angle degrees): 0=right, go CCW -->
+        <!-- Helper: compute positions for labels -->
+        <!-- Stage circles -->
+        <!-- Plan -->
+        <g class="stage" data-stage="Plan" id="s-Plan" transform="translate(200,0)">
+          <circle r="34" fill="#052833" stroke="rgba(255,255,255,0.04)"></circle>
+          <text x="0" y="-6" class="badge" text-anchor="middle">PLAN</text>
+          <text x="0" y="16" class="stage-label" text-anchor="middle" font-size="10">Requirements</text>
+        </g>
+
+        <!-- Develop -->
+        <g class="stage" data-stage="Develop" id="s-Develop" transform="translate(141,-141)">
+          <circle r="34" fill="#04242f" stroke="rgba(255,255,255,0.04)"></circle>
+          <text x="0" y="-6" class="badge" text-anchor="middle">DEV</text>
+          <text x="0" y="16" class="stage-label" text-anchor="middle" font-size="10">Code</text>
+        </g>
+
+        <!-- Build -->
+        <g class="stage" data-stage="Build" id="s-Build" transform="translate(0,-200)">
+          <circle r="34" fill="#041b28" stroke="rgba(255,255,255,0.04)"></circle>
+          <text x="0" y="-6" class="badge" text-anchor="middle">BUILD</text>
+          <text x="0" y="16" class="stage-label" text-anchor="middle" font-size="10">Compile</text>
+        </g>
+
+        <!-- Test -->
+        <g class="stage" data-stage="Test" id="s-Test" transform="translate(-141,-141)">
+          <circle r="34" fill="#04121e" stroke="rgba(255,255,255,0.04)"></circle>
+          <text x="0" y="-6" class="badge" text-anchor="middle">TEST</text>
+          <text x="0" y="16" class="stage-label" text-anchor="middle" font-size="10">QA</text>
+        </g>
+
+        <!-- Release -->
+        <g class="stage" data-stage="Release" id="s-Release" transform="translate(-200,0)">
+          <circle r="34" fill="#071421" stroke="rgba(255,255,255,0.04)"></circle>
+          <text x="0" y="-6" class="badge" text-anchor="middle">RELEASE</text>
+          <text x="0" y="16" class="stage-label" text-anchor="middle" font-size="10">Package</text>
+        </g>
+
+        <!-- Deploy -->
+        <g class="stage" data-stage="Deploy" id="s-Deploy" transform="translate(-141,141)">
+          <circle r="34" fill="#081a20" stroke="rgba(255,255,255,0.04)"></circle>
+          <text x="0" y="-6" class="badge" text-anchor="middle">DEPLOY</text>
+          <text x="0" y="16" class="stage-label" text-anchor="middle" font-size="10">Push</text>
+        </g>
+
+        <!-- Operate -->
+        <g class="stage" data-stage="Operate" id="s-Operate" transform="translate(0,200)">
+          <circle r="34" fill="#072025" stroke="rgba(255,255,255,0.04)"></circle>
+          <text x="0" y="-6" class="badge" text-anchor="middle">OPERATE</text>
+          <text x="0" y="16" class="stage-label" text-anchor="middle" font-size="10">Run</text>
+        </g>
+
+        <!-- Monitor -->
+        <g class="stage" data-stage="Monitor" id="s-Monitor" transform="translate(141,141)">
+          <circle r="34" fill="#05232b" stroke="rgba(255,255,255,0.04)"></circle>
+          <text x="0" y="-6" class="badge" text-anchor="middle">MON</text>
+          <text x="0" y="16" class="stage-label" text-anchor="middle" font-size="10">Observe</text>
+        </g>
+
+        <!-- flow arrows (curved) - small ones connecting nodes clockwise -->
+        <g stroke="rgba(255,255,255,0.06)" stroke-width="1" fill="none">
+          <!-- Arrow paths (manual bezier curves) -->
+          <path d="M170,0 C180,-8 198,-22 140,-140" />
+          <path d="M100,-190 C92,-200 78,-212 2,-190" />
+          <path d="M-30,-170 C-80,-150 -120,-120 -170,-85" />
+          <path d="M-200,-10 C-210,-2 -222,12 -170,140" />
+          <path d="M-130,170 C-120,180 -100,200 -2,190" />
+          <path d="M40,170 C80,150 120,120 170,85" />
+          <path d="M200,10 C210,2 222,-12 170,-140" opacity="0.25"/>
+        </g>
+
+        <!-- center badge -->
+        <g transform="translate(0,0)">
+          <circle r="56" fill="rgba(6,182,212,0.06)" stroke="rgba(6,182,212,0.14)" filter="url(#glow)"></circle>
+          <text x="0" y="-8" text-anchor="middle" font-size="14" fill="#dffbff" font-weight="700">DevOps</text>
+          <text x="0" y="12" text-anchor="middle" font-size="11" fill="#cfeaf0">Continuous Lifecycle</text>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Panel Card -->
+    <div class="card panel" id="infoPanel" aria-live="polite">
+      <h3 class="stage-title" id="stageTitle">Hover a stage</h3>
+      <p class="stage-desc" id="stageDesc">Move your mouse over any segment of the DevOps cycle (or click a stage button) to see a short explanation and how it maps to the Daily Expense Tracker experiment.</p>
+
+      <div class="mapping" id="stageMap">
+        <strong>Example mapping to Daily Expense Tracker:</strong>
+        <ul id="mapList" style="margin:8px 0 0 16px; color:#d2f6fb;"></ul>
+      </div>
+
+      <div class="stages-list" style="margin-top:14px;">
+        <!-- Buttons to focus each stage -->
+        <button onclick="selectStage('Plan')">Plan — define scope & features</button>
+        <button onclick="selectStage('Develop')">Develop — implement UI & logic</button>
+        <button onclick="selectStage('Build')">Build — bundle & prepare</button>
+        <button onclick="selectStage('Test')">Test — manual & automated tests</button>
+        <button onclick="selectStage('Release')">Release — create release artifact</button>
+        <button onclick="selectStage('Deploy')">Deploy — deliver to environment</button>
+        <button onclick="selectStage('Operate')">Operate — run in production</button>
+        <button onclick="selectStage('Monitor')">Monitor — collect metrics & logs</button>
+      </div>
+    </div>
+
+    <footer>
+      <small>DevOps lifecycle illustrated — tailored for a Daily Expense Tracker experiment. Hover a node or use stage buttons to explore.</small>
+    </footer>
+  </div>
+
+<script>
+  // stage definitions and mapping to the Expense Tracker experiment
+  const STAGES = {
+    "Plan": {
+      title: "Plan — Requirements & Design",
+      desc: "Define goals, user stories and acceptance criteria. Decide which features the Daily Expense Tracker needs (budget set, add expenses, persistence, UI).",
+      map: ["Write user stories: 'Set daily budget', 'Add expense', 'Delete expense'.", "Design simple UI wireframe and data model (budget, expenses array)."]
+    },
+    "Develop": {
+      title: "Develop — Implementation",
+      desc: "Write the HTML/CSS/JavaScript code to implement the UI and logic for expense entry, totals and progress bar.",
+      map: ["Build form elements (budget, name, amount), render list and progress bar.", "Implement event handlers for add/delete and UI updates."]
+    },
+    "Build": {
+      title: "Build — Package & Automate",
+      desc: "Bundle or prepare the application for release. For single-file experiments this can mean minifying or creating a distributable artifact.",
+      map: ["Create a minified script (optional) or a single deployable HTML file.", "Automate build steps using a simple script if needed."]
+    },
+    "Test": {
+      title: "Test — Ensure Quality",
+      desc: "Run manual and automated tests: validation, edge cases, UX checks. Verify that calculations and persistence work as expected.",
+      map: ["Manual tests: add/delete expenses, refresh persistence, boundary amounts.", "Automated tests: small JS unit tests for total calculation."]
+    },
+    "Release": {
+      title: "Release — Prepare Deliverable",
+      desc: "Create a release artifact (zip, hosted HTML) and update version notes and changelog.",
+      map: ["Bundle final HTML file, tag release (v1.0).", "Prepare README with usage and deployment steps."]
+    },
+    "Deploy": {
+      title: "Deploy — Deliver to Environment",
+      desc: "Publish the app to the intended environment (static host, GitHub Pages, local server).",
+      map: ["Push files to GitHub and enable Pages, or upload to a static host.", "Verify the app loads and assets are correct in the target environment."]
+    },
+    "Operate": {
+      title: "Operate — Run & Support",
+      desc: "Provide operational support, backups and basic maintenance. Ensure the app runs reliably for users.",
+      map: ["Monitor storage usage, handle simple bug fixes, reply to user feedback.", "Schedule small maintenance updates."]
+    },
+    "Monitor": {
+      title: "Monitor — Observe & Improve",
+      desc: "Collect metrics and logs to learn how users use the app and detect regressions or errors.",
+      map: ["Track errors (console, browser), measure usage frequency, watch storage growth.", "Use observations to inform next planning cycle (Plan)."]
+    }
+  };
+
+  // initialize interactive behaviors
+  document.querySelectorAll('.stage').forEach(g => {
+    g.addEventListener('mouseenter', () => hoverStage(g.dataset.stage));
+    g.addEventListener('click', () => selectStage(g.dataset.stage));
+    g.addEventListener('mouseleave', () => clearHighlight());
+  });
+
+  // hover behavior
+  function hoverStage(name){
+    highlight(name);
+    showInfo(name);
+  }
+
+  // set active visuals on svg nodes
+  function highlight(name){
+    // clear others
+    document.querySelectorAll('.stage').forEach(s => s.classList.remove('active'));
+    const node = document.getElementById('s-' + name);
+    if(node) node.classList.add('active');
+  }
+  function clearHighlight(){
+    // keep nothing active on leave
+    // do not clear if a stage is selected via selectStage (we keep lastSelected)
+    if(!window.lastSelected) document.querySelectorAll('.stage').forEach(s => s.classList.remove('active'));
+  }
+
+  // show info in panel
+  function showInfo(name){
+    const info = STAGES[name];
+    if(!info) return;
+    document.getElementById('stageTitle').textContent = info.title;
+    document.getElementById('stageDesc').textContent = info.desc;
+    const mapList = document.getElementById('mapList');
+    mapList.innerHTML = '';
+    info.map.forEach(item => {
+      const li = document.createElement('li');
+      li.textContent = item;
+      mapList.appendChild(li);
+    });
+  }
+
+  // select stage by button or click (keeps active)
+  function selectStage(name){
+    window.lastSelected = name;
+    highlight(name);
+    showInfo(name);
+    // scroll panel into view on small screens
+    document.getElementById('infoPanel').scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  // initialize: show Plan by default
+  selectStage('Plan');
+</script>
+</body>
+</html>
